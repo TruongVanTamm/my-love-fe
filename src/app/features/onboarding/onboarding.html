@@ -1,0 +1,65 @@
+<div class="public-page">
+  <header class="public-header">
+    <a class="brand" routerLink="/"
+      ><span class="brand-mark" aria-hidden="true">✳</span> our little universe.</a
+    ><span class="eyebrow">CHƯƠNG 01 / CHÚNG MÌNH</span>
+  </header>
+  <main class="form-page" id="main-content">
+    <div class="form-intro">
+      <p class="eyebrow">CHÀO {{ auth.user()?.displayName }}</p>
+      <h1>Một nơi để<br /><em>thuộc về.</em></h1>
+      <p>Đặt tên cho góc nhỏ của hai người và chọn ngày câu chuyện bắt đầu.</p>
+      <div class="intro-quote">Không cần một dịp đặc biệt.<br />Có nhau đã là đủ.</div>
+    </div>
+    <section class="form-card" [attr.aria-busy]="busy()">
+      @if (auth.user()?.coupleId) {
+        <p class="eyebrow">BẠN ĐÃ CÓ MỘT NƠI ĐỂ TRỞ VỀ</p>
+        <h2>Không gian đang đợi bạn</h2>
+        <p>Mỗi người chỉ thuộc một Couple Space.</p>
+        <a class="button primary" routerLink="/home">Về nhà thôi ↗</a>
+      } @else {
+        <h2>Tạo không gian chung</h2>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <label for="space-name">Tên không gian</label
+          ><input
+            id="space-name"
+            formControlName="name"
+            maxlength="100"
+            placeholder="Ví dụ: Nhà của Mây và Gió"
+          />
+          <label for="started-at">Ngày chúng mình bắt đầu</label
+          ><input id="started-at" type="date" formControlName="startedAt" />
+          <label for="timezone">Múi giờ của chúng mình</label
+          ><input
+            id="timezone"
+            formControlName="timezone"
+            aria-describedby="timezone-hint"
+            list="timezones"
+          /><datalist id="timezones">
+            <option value="Asia/Ho_Chi_Minh"></option>
+            <option value="Asia/Tokyo"></option>
+            <option value="Europe/Paris"></option>
+            <option value="America/New_York"></option>
+            <option value="UTC"></option>
+          </datalist>
+          <p id="timezone-hint" class="field-hint">
+            Dùng tên IANA, ví dụ Asia/Ho_Chi_Minh. Ngày kỷ niệm tính theo múi giờ này.
+          </p>
+          @if (form.touched && form.invalid) {
+            <p class="field-error">Vui lòng điền đầy đủ tên, ngày bắt đầu và múi giờ.</p>
+          }
+          @if (error()) {
+            <p class="error-banner" role="alert">{{ error() }}</p>
+          }
+          <button class="button primary full-width" type="submit" [disabled]="busy()">
+            {{ busy() ? 'Đang tạo…' : 'Tạo góc nhỏ của hai ta ↗' }}
+          </button>
+        </form>
+        <p class="privacy-note">
+          Đã nhận lời mời từ người thương? Mở lại đường dẫn lời mời để tham gia, thay vì tạo không
+          gian mới.
+        </p>
+      }
+    </section>
+  </main>
+</div>

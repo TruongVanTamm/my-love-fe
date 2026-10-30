@@ -1,0 +1,47 @@
+<div class="public-page">
+  <header class="public-header">
+    <a class="brand" routerLink="/"
+      ><span class="brand-mark" aria-hidden="true">✳</span> our little universe.</a
+    >
+  </header>
+  <main class="invitation-page" id="main-content">
+    <section class="form-card invitation-card">
+      <span class="invitation-symbol" aria-hidden="true">✧</span>
+      <p class="eyebrow">MỘT LỜI MỜI RẤT RIÊNG</p>
+      <h1>Có người muốn<br /><em>cùng bạn xây một vũ trụ.</em></h1>
+      @if (!validToken) {
+        <p class="error-banner" role="alert">
+          Đường dẫn lời mời không hợp lệ. Hãy nhờ người thương gửi lại nhé.
+        </p>
+      } @else if (!ready()) {
+        <p role="status">Đang kiểm tra tài khoản…</p>
+      } @else if (!auth.user()) {
+        <p>
+          Đăng nhập hoặc tạo tài khoản riêng để nhận lời mời. Đường dẫn có hiệu lực trong 48 giờ và
+          chỉ dùng một lần.
+        </p>
+        <a class="button primary" routerLink="/login" [queryParams]="{ returnUrl: returnUrl }"
+          >Đăng nhập để tham gia ↗</a
+        >
+        <p class="form-switch">
+          Chưa có tài khoản?
+          <a routerLink="/register" [queryParams]="{ returnUrl: returnUrl }">Tạo tài khoản</a>
+        </p>
+      } @else if (auth.user()?.coupleId) {
+        <p>Bạn đã thuộc một không gian chung. Mỗi tài khoản chỉ có thể tham gia một không gian.</p>
+        <a class="button primary" routerLink="/home">Về không gian của bạn ↗</a>
+      } @else {
+        <p>
+          Chào {{ auth.user()?.displayName }}. Nhận lời mời để tham gia không gian chung với người
+          thương. Hai người sẽ cùng nhìn thấy hồ sơ Couple Space.
+        </p>
+        <button class="button primary" (click)="accept()" [disabled]="busy()">
+          {{ busy() ? 'Đang tham gia…' : 'Mình đồng ý ♡' }}
+        </button>
+      }
+      @if (error()) {
+        <p class="error-banner" role="alert">{{ error() }}</p>
+      }
+    </section>
+  </main>
+</div>

@@ -1,0 +1,87 @@
+<div class="public-page">
+  <header class="public-header">
+    <a class="brand" routerLink="/"
+      ><span class="brand-mark" aria-hidden="true">✳</span> our little universe.</a
+    ><a class="text-link" routerLink="/">Về trang chủ ↗</a>
+  </header>
+  <main class="form-page" id="main-content">
+    <div class="form-intro">
+      <p class="eyebrow">A LITTLE PLACE, JUST FOR US.</p>
+      <h1>
+        {{ register ? 'Một khởi đầu' : 'Mừng bạn' }}<br /><em>{{
+          register ? 'thật dịu dàng.' : 'trở về.'
+        }}</em>
+      </h1>
+      <p>
+        {{
+          register
+            ? 'Tạo tài khoản riêng của bạn. Câu chuyện của hai người bắt đầu từ đây.'
+            : 'Một góc nhỏ, một người thương, và những ngày thật đáng nhớ.'
+        }}
+      </p>
+      <div class="intro-quote">“Có nhau, những điều bình thường<br />cũng trở nên đặc biệt.”</div>
+    </div>
+    <section class="form-card" [attr.aria-busy]="busy()">
+      <p class="eyebrow">{{ register ? 'CHƯƠNG ĐẦU TIÊN' : 'CHÚNG MÌNH LẠI GẶP NHAU' }}</p>
+      <h2>{{ register ? 'Tạo tài khoản' : 'Đăng nhập' }}</h2>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        @if (register) {
+          <label for="displayName">Tên bạn muốn được gọi</label
+          ><input
+            id="displayName"
+            formControlName="displayName"
+            autocomplete="nickname"
+            maxlength="80"
+            placeholder="Tên của bạn"
+            [attr.aria-invalid]="
+              form.controls.displayName.touched && form.controls.displayName.invalid
+            "
+          />
+        }
+        <label for="email">Email</label
+        ><input
+          id="email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          maxlength="254"
+          placeholder="ban@example.com"
+          [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
+        />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <p class="field-error">Vui lòng nhập email hợp lệ.</p>
+        }
+        <label for="password">Mật khẩu</label
+        ><input
+          id="password"
+          type="password"
+          formControlName="password"
+          [attr.autocomplete]="register ? 'new-password' : 'current-password'"
+          minlength="12"
+          maxlength="128"
+          aria-describedby="password-hint"
+          [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid"
+        />
+        <p id="password-hint" class="field-hint">Từ 12 đến 128 ký tự.</p>
+        @if (form.invalid && form.touched) {
+          <p class="field-error">Vui lòng kiểm tra các trường trước khi tiếp tục.</p>
+        }
+        @if (error()) {
+          <p class="error-banner" role="alert">{{ error() }}</p>
+        }
+        <button class="button primary full-width" type="submit" [disabled]="busy()">
+          {{ submitLabel() }}
+        </button>
+      </form>
+      <p class="form-switch">
+        {{ register ? 'Đã có tài khoản?' : 'Chưa có tài khoản?' }}
+        <a
+          [routerLink]="register ? '/login' : '/register'"
+          [queryParams]="{ returnUrl: returnUrl }"
+          >{{ register ? 'Đăng nhập' : 'Tạo tài khoản' }}</a
+        >
+      </p>
+      <p class="privacy-note">Tài khoản riêng của bạn. Không gian chỉ dành cho hai người.</p>
+    </section>
+  </main>
+</div>

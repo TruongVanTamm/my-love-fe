@@ -1,0 +1,129 @@
+<main id="main-content" [attr.aria-busy]="loading()">
+  <header class="page-heading">
+    <div>
+      <p class="eyebrow">OUR LITTLE UNIVERSE / TỔNG QUAN</p>
+      <h1>Chào {{ auth.user()?.displayName }},<br /><em>mừng bạn về nhà.</em></h1>
+    </div>
+    <button
+      class="button secondary compact"
+      (click)="load()"
+      [disabled]="loading()"
+      aria-label="Làm mới dữ liệu dashboard"
+    >
+      {{ loading() ? 'Đang tải…' : 'Làm mới ↻' }}
+    </button>
+  </header>
+  @if (error()) {
+    <div class="error-banner" role="alert">
+      {{ error() }} <a routerLink="/login">Đăng nhập lại</a>
+    </div>
+  }
+  @if (loading() && !data()) {
+    <div class="card loading-card" role="status">Đang mở góc nhỏ của chúng mình…</div>
+  }
+  @if (data(); as dashboard) {
+    <section class="relationship-card" aria-labelledby="relationship-title">
+      <div>
+        <p class="eyebrow">{{ dashboard.couple.name }}</p>
+        <h2 id="relationship-title">Thật may,<br />vì đã <em>có nhau.</em></h2>
+        <p class="since">Từ ngày {{ dashboard.couple.startedAt | date: 'dd.MM.yyyy' : 'UTC' }}</p>
+        <div class="couple-avatars">
+          @for (member of dashboard.couple.members; track member.userId) {
+            <span class="avatar" [attr.aria-label]="member.displayName">{{
+              member.displayName.slice(0, 1)
+            }}</span>
+          }
+          <span class="member-names">
+            @for (member of dashboard.couple.members; track member.userId; let last = $last) {
+              {{ member.displayName }}{{ last ? '' : ' & ' }}
+            }
+          </span>
+        </div>
+      </div>
+      <div class="day-counter">
+        <span class="counter-star" aria-hidden="true">✧</span
+        ><strong>{{ dashboard.relationship.daysTogether | number }}</strong
+        ><span>ngày chung một câu chuyện</span>
+      </div>
+    </section>
+    <div class="dashboard-grid">
+      <section class="card anniversary-card">
+        <p class="eyebrow">CỘT MỐC TIẾP THEO</p>
+        <h2>
+          {{
+            dashboard.relationship.isAnniversary
+              ? 'Chúc mừng ngày của chúng mình!'
+              : 'Lại thêm một năm thương nhau.'
+          }}
+        </h2>
+        <p>
+          <strong class="anniversary-number">{{
+            dashboard.relationship.daysUntilAnniversary
+          }}</strong>
+          ngày nữa
+        </p>
+        <span class="field-hint"
+          >{{ dashboard.relationship.nextAnniversary | date: 'dd MMMM, yyyy' : 'UTC' }} ·
+          {{ dashboard.couple.timezone }}</span
+        >
+      </section>
+      <section class="card quote-card">
+        <p class="eyebrow">MỘT ĐIỀU NHỎ HÔM NAY</p>
+        <blockquote>“{{ dashboard.quote }}”</blockquote>
+        <span class="quote-star" aria-hidden="true">✳</span>
+      </section>
+    </div>
+    <app-invite-partner [couple]="dashboard.couple" />
+    <nav class="quick-actions" aria-label="Lối tắt của chúng mình">
+      <a routerLink="/memories" class="card quick-action">
+        <span aria-hidden="true">✦</span><strong>Viết kỷ niệm</strong
+        ><span>Giữ lại một ngày đáng nhớ ↗</span>
+      </a>
+      <a routerLink="/story" class="card quick-action">
+        <span aria-hidden="true">✧</span><strong>Thêm cột mốc</strong
+        ><span>Kể tiếp câu chuyện của hai ta ↗</span>
+      </a>
+      <a routerLink="/albums" class="card quick-action">
+        <span aria-hidden="true">▤</span><strong>Mở album</strong
+        ><span>Nhìn lại những điều đã qua ↗</span>
+      </a>
+    </nav>
+    <section class="recent-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">MỚI TRONG NHẬT KÝ</p>
+          <h2>Những điều <em>vừa giữ lại.</em></h2>
+        </div>
+        <a routerLink="/memories" class="text-link">Xem tất cả ↗</a>
+      </div>
+      <div class="memory-grid">
+        @for (memory of dashboard.recentMemories ?? []; track memory.id) {
+          <article class="card memory-card">
+            <span class="memory-mark" aria-hidden="true">✧</span>
+            <p class="eyebrow">
+              {{ memory.happenedAt | date: 'dd.MM.yyyy' : 'UTC' }} ·
+              {{ memory.visibility === 'private' ? 'RIÊNG' : 'CHUNG' }}
+            </p>
+            <h3>
+              <a [routerLink]="['/memories', memory.id]">{{ memory.title }}</a>
+            </h3>
+          </article>
+        }
+      </div>
+      @if (!dashboard.recentMemories?.length) {
+        <p class="field-hint">Kỷ niệm đầu tiên vẫn đang đợi chúng mình viết.</p>
+      }
+    </section>
+    <section class="chapter-note">
+      <span aria-hidden="true">✦</span>
+      <div>
+        <p class="eyebrow">CHƯƠNG ĐẦU TIÊN ĐÃ BẮT ĐẦU</p>
+        <p>
+          Mỗi ngày bên nhau đều có thể trở thành một kỷ niệm. Hãy viết lại điều bạn muốn giữ lâu
+          hơn.
+        </p>
+      </div>
+      <a class="text-link" routerLink="/memories">Viết kỷ niệm ↗</a>
+    </section>
+  }
+</main>

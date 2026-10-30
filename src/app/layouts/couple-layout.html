@@ -1,0 +1,49 @@
+<a class="skip-link" href="#main-content">Đến nội dung chính</a>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" routerLink="/home"
+      ><span class="brand-mark" aria-hidden="true">✳</span><span>our little<br />universe.</span></a
+    >
+    <p class="nav-caption eyebrow">GÓC NHỎ CỦA HAI TA</p>
+    <nav aria-label="Điều hướng chính">
+      <a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page"
+        ><span aria-hidden="true">⌂</span> Tổng quan</a
+      >
+      <a routerLink="/settings/couple" routerLinkActive="active" ariaCurrentWhenActive="page"
+        ><span aria-hidden="true">♡</span> Không gian chung</a
+      >
+      <a routerLink="/memories" routerLinkActive="active" ariaCurrentWhenActive="page"
+        ><span aria-hidden="true">✦</span> Kỷ niệm</a
+      >
+      <a routerLink="/albums" routerLinkActive="active" ariaCurrentWhenActive="page"
+        ><span aria-hidden="true">▣</span> Album</a
+      >
+      <a routerLink="/story" routerLinkActive="active" ariaCurrentWhenActive="page"
+        ><span aria-hidden="true">↝</span> Câu chuyện</a
+      >
+      <a routerLink="/universe" routerLinkActive="active" ariaCurrentWhenActive="page"
+        ><span aria-hidden="true">✧</span> Vũ trụ</a
+      >
+      <a routerLink="/open-when" routerLinkActive="active" ariaCurrentWhenActive="page"
+        ><span aria-hidden="true">♡</span> Open When</a
+      >
+    </nav>
+    <div class="sidebar-bottom">
+      <p class="sidebar-quote">little things,<br /><em>lasting memories.</em></p>
+      <div class="user-info">
+        <span class="avatar">{{ auth.user()?.displayName?.slice(0, 1) }}</span>
+        <div>
+          <strong>{{ auth.user()?.displayName }}</strong
+          ><small>Tài khoản của bạn</small>
+        </div>
+      </div>
+      <button class="logout" (click)="logout()" [disabled]="busy()">
+        {{ busy() ? 'Đang đăng xuất…' : 'Đăng xuất ↗' }}
+      </button>
+      @if (error()) {
+        <p class="field-error" role="alert">{{ error() }}</p>
+      }
+    </div>
+  </aside>
+  <div class="app-content"><router-outlet /></div>
+</div>

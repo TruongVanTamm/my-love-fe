@@ -1,0 +1,160 @@
+<main id="main-content" class="universe-page" [attr.aria-busy]="loading()">
+  <header class="page-heading universe-heading">
+    <div class="universe-intro">
+      <p class="eyebrow">OUR LITTLE UNIVERSE / BẦU TRỜI CỦA HAI TA</p>
+      <h1>Những điều ta nhớ<br /><em>hóa thành ánh sáng.</em></h1>
+      <p>Mỗi kỷ niệm là một ngôi sao. Những sợi sáng kể cách chúng mình tìm thấy nhau.</p>
+      @if (universe(); as sky) {
+        <div class="universe-stats" aria-label="Thống kê bầu trời">
+          <span
+            ><strong>{{ sky.stars.length }}</strong> ngôi sao</span
+          >
+          <span
+            ><strong>{{ sky.constellations.length }}</strong> chòm sao</span
+          >
+        </div>
+      }
+    </div>
+    <button class="button compact universe-refresh" (click)="load()" [disabled]="loading()">
+      Làm mới ↻
+    </button>
+  </header>
+
+  @if (error()) {
+    <div class="error-banner" role="alert">
+      {{ error() }}
+      <button class="button secondary compact" (click)="load()" [disabled]="loading()">
+        Thử lại
+      </button>
+    </div>
+  }
+  @if (loading() && !universe()) {
+    <p role="status">Đang tải bầu trời…</p>
+  }
+
+  @if (universe(); as sky) {
+    @if (showAnniversary()) {
+      <p class="anniversary-banner" role="status">
+        ✦ Hôm nay là ngày kỷ niệm của hai người. Bầu trời sáng hơn một chút!
+      </p>
+    }
+    @if (!sky.stars.length) {
+      <section class="universe-empty card">
+        <h2>Bầu trời đang chờ ngôi sao đầu tiên.</h2>
+        <p>Thêm một kỷ niệm hoặc cột mốc để bắt đầu vũ trụ của hai người.</p>
+        <a class="button primary" routerLink="/memories">Tạo kỷ niệm ↗</a>
+      </section>
+    } @else {
+      <p class="universe-section-title">✧ HÃY CHẠM VÀO MỘT ÁNH SAO ĐỂ MỞ CÂU CHUYỆN</p>
+      <div class="universe-toolbar" role="toolbar" aria-label="Điều khiển vũ trụ">
+        <button
+          class="button secondary compact"
+          (click)="resetCamera()"
+          [disabled]="!webglAvailable()"
+        >
+          Đặt lại góc nhìn
+        </button>
+        <button
+          class="button secondary compact"
+          (click)="focusSelected()"
+          [disabled]="!selectedId() || !webglAvailable()"
+        >
+          Tới ngôi sao
+        </button>
+        <button
+          class="button secondary compact"
+          (click)="changeSetting('animationEnabled')"
+          [disabled]="settingsBusy()"
+          [attr.aria-pressed]="sky.settings.animationEnabled"
+        >
+          Chuyển động: {{ sky.settings.animationEnabled ? 'Bật' : 'Tắt' }}
+        </button>
+        <button
+          class="button secondary compact"
+          (click)="changeSetting('reducedMotion')"
+          [disabled]="settingsBusy()"
+          [attr.aria-pressed]="sky.settings.reducedMotion"
+        >
+          Giảm chuyển động: {{ sky.settings.reducedMotion ? 'Bật' : 'Tắt' }}
+        </button>
+        @if (sky.anniversary) {
+          <button
+            class="button secondary compact"
+            (click)="changeSetting('anniversaryEffectsEnabled')"
+            [disabled]="settingsBusy()"
+            [attr.aria-pressed]="sky.settings.anniversaryEffectsEnabled"
+          >
+            Hiệu ứng kỷ niệm: {{ sky.settings.anniversaryEffectsEnabled ? 'Bật' : 'Tắt' }}
+          </button>
+        }
+      </div>
+      <div class="universe-layout" [class.story-open]="!!selectedId()">
+        <div class="universe-main">
+          @if (webglAvailable()) {
+            <app-universe-scene
+              [stars]="sky.stars"
+              [constellations]="sky.constellations"
+              [selectedId]="selectedId()"
+              [animationEnabled]="sky.settings.animationEnabled"
+              [reducedMotion]="reducedMotion()"
+              [anniversary]="showAnniversary()"
+              (selected)="selectStar($event)"
+              (available)="webglAvailable.set($event)"
+            />
+            <p class="scene-hint">
+              Kéo để xoay · Cuộn hoặc chụm để phóng to · Kéo hai ngón để di chuyển
+            </p>
+          } @else {
+            <div class="fallback card" role="status">
+              <h2>Thiết bị này chưa mở được WebGL.</h2>
+              <p>Bạn vẫn có thể khám phá từng kỷ niệm trong danh sách bên dưới.</p>
+            </div>
+          }
+          <details class="star-list" [open]="!webglAvailable()">
+            <summary>
+              Khám phá từng ngôi sao <span>{{ sky.stars.length }} câu chuyện</span>
+            </summary>
+            <ul>
+              @for (star of sky.stars; track star.id; let index = $index) {
+                <li>
+                  <button
+                    type="button"
+                    (click)="selectStar(star.id)"
+                    [attr.aria-current]="selectedId() === star.id ? 'true' : null"
+                  >
+                    <span
+                      class="star-list-symbol"
+                      [class.milestone]="star.sourceType === 'milestone'"
+                      aria-hidden="true"
+                      >✦</span
+                    >
+                    <span
+                      ><small>ÁNH SAO {{ (index + 1).toString().padStart(2, '0') }}</small
+                      >{{ starName(star, index) }}</span
+                    >
+                    <span class="star-list-arrow" aria-hidden="true">↗</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </details>
+        </div>
+        @if (selectedId()) {
+          <app-star-story-panel
+            [detail]="detail()"
+            [loading]="detailLoading()"
+            [error]="detailError()"
+            [groups]="sky.constellations"
+            [groupBusy]="groupBusy()"
+            [groupError]="groupError()"
+            (closed)="closeStory()"
+            (retried)="retryStory()"
+            (assigned)="assignGroup($event)"
+            (createdGroup)="createGroup($event)"
+            (removed)="removeStar()"
+          />
+        }
+      </div>
+    }
+  }
+</main>

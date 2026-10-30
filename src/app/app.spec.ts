@@ -3,22 +3,17 @@ import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [App],
-    })
-      .compileComponents();
+    await TestBed.configureTestingModule({ imports: [App] }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it('should render title', async () => {
+  it('hiển thị trang khởi đầu bằng tiếng Việt', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, my-love');
+    const element: HTMLElement = fixture.nativeElement;
+
+    expect(element.querySelector('main h1')?.textContent).toBe('My Love');
+    expect(element.querySelector('main p')?.textContent).toBe('Sẵn sàng cho những điều mới.');
+    expect(element.querySelector('router-outlet')).not.toBeNull();
+    expect(element.querySelector('.angular-logo')).toBeNull();
   });
 });

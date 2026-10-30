@@ -1,59 +1,42 @@
-# MyLove
+# My Love
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.4.
+Bộ khung Angular 22 standalone, TypeScript strict và Tailwind CSS 4.
+Trang demo Angular đã được thay bằng trang khởi đầu tối giản. Chưa tích hợp backend hoặc API.
 
-## Development server
+## Yêu cầu
 
-To start a local development server, run:
+- Node.js tương thích Angular CLI: `^22.22.3`, `^24.15.0` hoặc `>=26.0.0`.
+- npm theo `packageManager` trong `package.json` (hiện tại `11.19.1`).
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Chạy dự án
 
 ```bash
-ng generate component component-name
+npm ci
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Mở `http://localhost:4200/`. Mã nguồn thay đổi sẽ tự động được tải lại.
+
+## Kiểm tra và build
 
 ```bash
-ng generate --help
+npm run format:check
+npm run typecheck
+npm run test:ci
+npm run build
 ```
 
-## Building
+Dùng `npm run format` để định dạng mã nguồn; `npm test` để chạy test ở chế độ watch.
+Build production nằm trong `dist/my-love/browser/`.
+Dự án chưa cấu hình ESLint hoặc SonarQube; `format:check` chỉ kiểm tra định dạng.
 
-To build the project run:
+## Cấu trúc
 
-```bash
-ng build
-```
+- `src/app/app.ts`, `app.html`, `app.css`: component gốc và giao diện khởi đầu.
+- `src/app/app.routes.ts`: khai báo route khi thêm trang mới.
+- `src/app/app.config.ts`: cấu hình provider cấp ứng dụng.
+- `src/styles.css`: Tailwind CSS và style toàn cục.
+- `public/`: tài nguyên tĩnh.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Thêm component bằng `npm run ng -- generate component ten-component`.
+Giữ component standalone và đặt test cạnh mã nguồn tương ứng.

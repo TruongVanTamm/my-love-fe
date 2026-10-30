@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "my-love": {
+    "my-love-fe": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -55,10 +55,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "my-love:build:production"
+              "buildTarget": "my-love-fe:build:production"
             },
             "development": {
-              "buildTarget": "my-love:build:development"
+              "buildTarget": "my-love-fe:build:development"
             }
           },
           "defaultConfiguration": "development"

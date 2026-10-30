@@ -1,4 +1,4 @@
-# My Love
+# my-love-fe
 
 Bộ khung Angular 22 standalone, TypeScript strict và Tailwind CSS 4.
 Trang demo Angular đã được thay bằng trang khởi đầu tối giản. Chưa tích hợp backend hoặc API.
@@ -27,7 +27,7 @@ npm run build
 ```
 
 Dùng `npm run format` để định dạng mã nguồn; `npm test` để chạy test ở chế độ watch.
-Build production nằm trong `dist/my-love/browser/`.
+Build production nằm trong `dist/my-love-fe/browser/`.
 Dự án chưa cấu hình ESLint hoặc SonarQube; `format:check` chỉ kiểm tra định dạng.
 
 ## Cấu trúc
